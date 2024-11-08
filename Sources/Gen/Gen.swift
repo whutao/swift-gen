@@ -303,6 +303,23 @@ extension Gen where Value == Float {
   }
 #endif
 
+#if canImport(Foundation)
+  import Foundation
+
+  extension Gen where Value == Date {
+    /// Returns a generator of random values within the specified range.
+    ///
+    /// - Parameter range: The range in which to create a random value. `range` must be finite.
+    /// - Returns: A generator of random values within the bounds of range.
+    @inlinable
+    public static func date(in range: ClosedRange<Value>) -> Gen<Date> {
+      return Gen<Double>
+        .double(in: range.lowerBound.timeIntervalSince1970...range.upperBound.timeIntervalSince1970)
+        .map(Date.init(timeIntervalSince1970:))
+    }
+  }
+#endif
+
 extension Gen where Value == Bool {
   /// A generator of random boolean values.
   public static let bool = Gen { rng in Bool.random(using: &rng) }
